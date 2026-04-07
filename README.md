@@ -199,7 +199,7 @@ screenshots/
 └── 05_migraciones_terminal.png
 ```
 
-| Archivo | Qué mostrar |
+| Archivo | Qué muestra |
 |---|---|
 | `01_dashboard.png` | Dashboard con el resumen general del sistema y últimas transacciones cargadas |
 | `02_usuarios_lista.png` | Lista de usuarios con balances y botones de acción (crear, editar, eliminar) |
