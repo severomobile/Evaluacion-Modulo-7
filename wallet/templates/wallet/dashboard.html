@@ -1,0 +1,91 @@
+{% extends 'wallet/base.html' %}
+
+{% block title %}Dashboard — Alke Wallet{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1 class="h3 mb-0 fw-bold">
+    <i class="bi bi-speedometer2 me-2 text-primary"></i>Dashboard
+  </h1>
+</div>
+
+<!-- ── Tarjetas de resumen ──────────────────────────────────────────────── -->
+<div class="row g-3 mb-4">
+  <div class="col-sm-6">
+    <div class="card stat-card blue p-3 d-flex flex-row align-items-center">
+      <div class="me-3">
+        <i class="bi bi-people-fill fs-1 text-primary opacity-75"></i>
+      </div>
+      <div>
+        <div class="text-muted small">Total Usuarios</div>
+        <div class="fw-bold fs-3">{{ total_usuarios }}</div>
+      </div>
+      <a href="{% url 'usuario_lista' %}" class="stretched-link"></a>
+    </div>
+  </div>
+  <div class="col-sm-6">
+    <div class="card stat-card green p-3 d-flex flex-row align-items-center">
+      <div class="me-3">
+        <i class="bi bi-arrow-left-right fs-1 text-success opacity-75"></i>
+      </div>
+      <div>
+        <div class="text-muted small">Total Transacciones</div>
+        <div class="fw-bold fs-3">{{ total_transacciones }}</div>
+      </div>
+      <a href="{% url 'transaccion_lista' %}" class="stretched-link"></a>
+    </div>
+  </div>
+</div>
+
+<!-- ── Últimas transacciones ────────────────────────────────────────────── -->
+<div class="card">
+  <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+    <h5 class="mb-0"><i class="bi bi-clock-history me-2"></i>Últimas Transacciones</h5>
+    <a href="{% url 'transaccion_crear' %}" class="btn btn-sm btn-primary">
+      <i class="bi bi-plus-lg me-1"></i>Nueva
+    </a>
+  </div>
+  <div class="card-body p-0">
+    {% if ultimas_transacciones %}
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Usuario</th>
+              <th>Tipo</th>
+              <th>Monto</th>
+              <th>Fecha</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for t in ultimas_transacciones %}
+            <tr>
+              <td>
+                <a href="{% url 'usuario_detalle' t.usuario.pk %}" class="text-decoration-none">
+                  {{ t.usuario.nombre_completo }}
+                </a>
+              </td>
+              <td>
+                <span class="badge badge-{{ t.tipo }} px-2 py-1 rounded-pill">
+                  {{ t.get_tipo_display }}
+                </span>
+              </td>
+              <td class="fw-semibold">${{ t.monto }}</td>
+              <td class="text-muted small">{{ t.fecha|date:"d/m/Y H:i" }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="text-center text-muted py-5">
+        <i class="bi bi-inbox fs-1"></i>
+        <p class="mt-2">Sin transacciones registradas aún.</p>
+        <a href="{% url 'transaccion_crear' %}" class="btn btn-primary btn-sm">
+          Registrar primera transacción
+        </a>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends 'wallet/base.html' %}
+{% block title %}Usuarios — Alke Wallet{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1 class="h3 mb-0 fw-bold">
+    <i class="bi bi-people me-2 text-primary"></i>Usuarios
+  </h1>
+  <a href="{% url 'usuario_crear' %}" class="btn btn-primary">
+    <i class="bi bi-person-plus me-1"></i>Nuevo Usuario
+  </a>
+</div>
+
+<div class="card">
+  <div class="card-body p-0">
+    {% if usuarios %}
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>#</th>
+              <th>Nombre</th>
+              <th>Email</th>
+              <th>Balance</th>
+              <th>Registrado</th>
+              <th class="text-center">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for u in usuarios %}
+            <tr>
+              <td class="text-muted">{{ u.pk }}</td>
+              <td>
+                <a href="{% url 'usuario_detalle' u.pk %}" class="fw-semibold text-decoration-none">
+                  {{ u.nombre_completo }}
+                </a>
+              </td>
+              <td class="text-muted">{{ u.email }}</td>
+              <td>
+                <span class="fw-bold {% if u.balance == 0 %}text-danger{% else %}text-success{% endif %}">
+                  ${{ u.balance }}
+                </span>
+              </td>
+              <td class="text-muted small">{{ u.fecha_creacion|date:"d/m/Y" }}</td>
+              <td class="text-center">
+                <a href="{% url 'usuario_detalle' u.pk %}" class="btn btn-sm btn-outline-secondary me-1" title="Ver detalle">
+                  <i class="bi bi-eye"></i>
+                </a>
+                <a href="{% url 'usuario_editar' u.pk %}" class="btn btn-sm btn-outline-primary me-1" title="Editar">
+                  <i class="bi bi-pencil"></i>
+                </a>
+                <a href="{% url 'usuario_eliminar' u.pk %}" class="btn btn-sm btn-outline-danger" title="Eliminar">
+                  <i class="bi bi-trash"></i>
+                </a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="text-center text-muted py-5">
+        <i class="bi bi-person-x fs-1"></i>
+        <p class="mt-2">No hay usuarios registrados.</p>
+        <a href="{% url 'usuario_crear' %}" class="btn btn-primary btn-sm">Crear primer usuario</a>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

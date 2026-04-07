@@ -1,0 +1,49 @@
+{% extends 'wallet/base.html' %}
+{% block title %}Eliminar Transacción — Alke Wallet{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-5">
+
+    <nav aria-label="breadcrumb" class="mb-3">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'transaccion_lista' %}">Transacciones</a></li>
+        <li class="breadcrumb-item active">Eliminar</li>
+      </ol>
+    </nav>
+
+    <div class="card border-danger">
+      <div class="card-header bg-danger text-white py-3">
+        <h5 class="mb-0">
+          <i class="bi bi-exclamation-triangle me-2"></i>Confirmar Eliminación
+        </h5>
+      </div>
+      <div class="card-body text-center py-4">
+        <i class="bi bi-arrow-left-right fs-1 text-danger mb-3 d-block"></i>
+
+        <p class="fs-6 text-muted mb-1">Transacción #{{ transaccion.pk }}</p>
+        <p class="fw-bold fs-5">
+          {{ transaccion.get_tipo_display }} — ${{ transaccion.monto }}
+        </p>
+        <p class="text-muted small">Usuario: <strong>{{ transaccion.usuario.nombre_completo }}</strong></p>
+
+        <div class="alert alert-warning text-start small mb-4">
+          <i class="bi bi-exclamation-circle me-1"></i>
+          El balance del usuario será <strong>revertido</strong> según el tipo de operación eliminada.
+        </div>
+
+        <form method="POST">
+          {% csrf_token %}
+          <a href="{% url 'transaccion_lista' %}" class="btn btn-outline-secondary me-2">
+            <i class="bi bi-arrow-left me-1"></i>Cancelar
+          </a>
+          <button type="submit" class="btn btn-danger">
+            <i class="bi bi-trash me-1"></i>Sí, eliminar
+          </button>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

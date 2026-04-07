@@ -1,0 +1,105 @@
+{% extends 'wallet/base.html' %}
+{% block title %}{{ usuario.nombre_completo }} — Alke Wallet{% endblock %}
+
+{% block content %}
+<!-- ── Encabezado ────────────────────────────────────────────────────────── -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb mb-0">
+      <li class="breadcrumb-item"><a href="{% url 'usuario_lista' %}">Usuarios</a></li>
+      <li class="breadcrumb-item active">{{ usuario.nombre_completo }}</li>
+    </ol>
+  </nav>
+  <div>
+    <a href="{% url 'usuario_editar' usuario.pk %}" class="btn btn-outline-primary btn-sm me-2">
+      <i class="bi bi-pencil me-1"></i>Editar
+    </a>
+    <a href="{% url 'usuario_eliminar' usuario.pk %}" class="btn btn-outline-danger btn-sm">
+      <i class="bi bi-trash me-1"></i>Eliminar
+    </a>
+  </div>
+</div>
+
+<!-- ── Tarjeta de datos del usuario ─────────────────────────────────────── -->
+<div class="card mb-4">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-8">
+        <h2 class="fw-bold mb-1">{{ usuario.nombre_completo }}</h2>
+        <p class="text-muted mb-0">
+          <i class="bi bi-envelope me-1"></i>{{ usuario.email }}
+        </p>
+        <p class="text-muted small mt-1">
+          <i class="bi bi-calendar me-1"></i>Registrado el {{ usuario.fecha_creacion|date:"d/m/Y" }}
+        </p>
+      </div>
+      <div class="col-md-4 text-md-end mt-3 mt-md-0">
+        <div class="text-muted small mb-1">Balance actual</div>
+        <div class="fs-2 fw-bold {% if usuario.balance == 0 %}text-danger{% else %}text-success{% endif %}">
+          ${{ usuario.balance }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Historial de transacciones ───────────────────────────────────────── -->
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h5 class="mb-0"><i class="bi bi-arrow-left-right me-2"></i>Historial de Transacciones</h5>
+  <a href="{% url 'transaccion_crear' %}" class="btn btn-sm btn-primary">
+    <i class="bi bi-plus-lg me-1"></i>Nueva Transacción
+  </a>
+</div>
+
+<div class="card">
+  <div class="card-body p-0">
+    {% if transacciones %}
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Tipo</th>
+              <th>Monto</th>
+              <th>Descripción</th>
+              <th>Fecha</th>
+              <th class="text-center">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for t in transacciones %}
+            <tr>
+              <td>
+                <span class="badge badge-{{ t.tipo }} px-2 py-1 rounded-pill">
+                  {{ t.get_tipo_display }}
+                </span>
+              </td>
+              <td class="fw-semibold">
+                {% if t.tipo == 'DEP' %}
+                  <span class="text-success">+${{ t.monto }}</span>
+                {% else %}
+                  <span class="text-danger">-${{ t.monto }}</span>
+                {% endif %}
+              </td>
+              <td class="text-muted small">{{ t.descripcion|default:"—" }}</td>
+              <td class="text-muted small">{{ t.fecha|date:"d/m/Y H:i" }}</td>
+              <td class="text-center">
+                <a href="{% url 'transaccion_editar' t.pk %}" class="btn btn-sm btn-outline-primary me-1">
+                  <i class="bi bi-pencil"></i>
+                </a>
+                <a href="{% url 'transaccion_eliminar' t.pk %}" class="btn btn-sm btn-outline-danger">
+                  <i class="bi bi-trash"></i>
+                </a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="text-center text-muted py-4">
+        <i class="bi bi-inbox"></i> Sin transacciones para este usuario.
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
